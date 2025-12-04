@@ -1,3 +1,4 @@
+import Broadcast.BroadcastSender;
 import ServersObserver.UDPSender;
 
 import java.io.*;
@@ -88,9 +89,11 @@ public class Server {
         String ServerIP = InetAddress.getLocalHost().getHostAddress();
 
         new Thread(() -> {
-            UDPSender udpSender = new UDPSender(MULTICAST_GROUP_ADDRESS);
+            //UDPSender udpSender = new UDPSender(MULTICAST_GROUP_ADDRESS);
+            BroadcastSender broadcastSender = new BroadcastSender();
             try {
-                udpSender.sendUDP();
+              //  udpSender.sendUDP();
+                broadcastSender.sendBroadcast();
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -1,3 +1,5 @@
+import Broadcast.BroadcastReceiver;
+import Broadcast.BroadcastSender;
 import ServersObserver.UDPReceiver;
 
 import javax.swing.*;
@@ -16,6 +18,9 @@ public class MainFrame extends JFrame {
     private Timer updateTimer;
     JList<String> serverTable = new JList<>(serverModel);
 
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver(BROADCAST_PORT);
+    private BroadcastSender broadcastSender;
+    private static final int BROADCAST_PORT = 8000;
     private Boolean connectionStatus = false;
 
     public MainFrame() {
@@ -53,7 +58,8 @@ public class MainFrame extends JFrame {
 
         new Thread(() -> {
             try {
-                udpReceiver.receiveUDP();
+                //udpReceiver.receiveUDP();
+                broadcastReceiver.receiveBroadcast();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -114,8 +120,8 @@ public class MainFrame extends JFrame {
     }
     private void updateServerList() {
         if (udpReceiver != null) {
-            List<String> servers = udpReceiver.getRunningServers();
-
+            servers = broadcastReceiver.getRunningServers();
+            System.out.println(servers);
             SwingUtilities.invokeLater(() -> {
                 String currentSelection = serverTable.getSelectedValue();
                 serverModel.clear();
